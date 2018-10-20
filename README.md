@@ -9,5 +9,5 @@ Python 3<br>
 ## Steps to Follow:
 Open SampleScene in Assets->Scenes<br>
 Press play in Unity<br>
-Go to Vispy Scripts
+Go to Vispy Scripts <br>
 Run python3 modifyatUnity.py on terminal
