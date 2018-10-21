@@ -1,0 +1,9 @@
+.vs
+.collabignore
+rotatingCube.sln
+rotatingCyl.sln
+rotCyl Vispy.sln
+Assembly-CSharp.csproj
+desktop.ini
+obj/
+Temp/
