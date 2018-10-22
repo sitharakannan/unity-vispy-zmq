@@ -17,6 +17,12 @@ import pickle
 from vispy.visuals import transforms
 from vispy.scene.visuals import Text
 
+def initialize_sub_socket():
+    context = zmq.Context()
+    socket = context.socket(zmq.REQ)
+    socket.connect("tcp://localhost:12346")
+    print('Set ZMQ Subscriber')
+    return(socket)
 
 TIMEOUT = 10000
 # Number of cols and rows in the table.
@@ -29,30 +35,13 @@ m = nrows*ncols
 # Number of samples per signal.
 n = 10
 
-def initialize_sub_socket():
-    context = zmq.Context()
-    socket = context.socket(zmq.REQ)
-    socket.connect("tcp://localhost:12346")
-    print('Set ZMQ Subscriber')
-    return(socket)
-
-def val_toFitScreen(oldValue):
-    newMin = -0.8
-    newMax = 0.8
-    oldMin = 0
-    oldMax = 360
-    oldRange = abs(oldMax - (oldMin))
-    newRange = abs(newMax - newMin)
-    newValue = (((oldValue - (oldMin)) * newRange) / oldRange) + newMin
-    #print("old, new: ", oldValue, newValue)
-    return newValue
-
 prevDesired = 0.0
 prevReal = 0.0
 noSamplestoSmooth = 20
 movingWindow = np.zeros((noSamplestoSmooth, 1), dtype=np.float32)
 mean_dM = np.zeros((n, 1), dtype=np.float32)
 dT = .011
+
 def recv_zmq_message():
     global socket, movingWindow, mean_dM, dT
     #TODO use prevReal & prevDesired
@@ -75,6 +64,17 @@ def recv_zmq_message():
 
             #print("movingMean: ", movingMean)
             return mean_dM
+
+def val_toFitScreen(oldValue):
+    newMin = -0.8
+    newMax = 0.8
+    oldMin = 0
+    oldMax = 360
+    oldRange = abs(oldMax - (oldMin))
+    newRange = abs(newMax - newMin)
+    newValue = (((oldValue - (oldMin)) * newRange) / oldRange) + newMin
+    #print("old, new: ", oldValue, newValue)
+    return newValue
 
 # Generate the signals as a (m, n) array.
 
