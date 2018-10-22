@@ -79,12 +79,10 @@ public class ServerObject : MonoBehaviour
 {
     public bool Connected;
     private NetMqPublisher _netMqPublisher;
-    private string _response;
-    public int no_Samples_per_Signal = 5; 
+    private string _response; 
     public GameObject cylinder;
-    private int startInd = -5;
-    private int endInd = 0;
-    private int length = 0;
+    private int ind = 1;
+    
     List<string> listA = new List<string>();
 
     private void Start()
@@ -102,49 +100,21 @@ public class ServerObject : MonoBehaviour
                 var line = reader.ReadLine();
                 var values = line.Split(',');
                 listA.Add(values[12]);
-                //UnityEngine.Debug.Log(values[12]);
-                UnityEngine.Debug.Log("start");
-
-
             }
         }
     }
 
     private void Update()
     {
-        endInd += no_Samples_per_Signal;
-        startInd += no_Samples_per_Signal;
-        //TODO: Handle looping when string ends
-        //if (endInd > listA.Count)
-        //{
-        //    diff = endInd - listA.Count;
-        //    endInd = 
-        //}
-
-        _response += " " + cylinder.transform.localEulerAngles.x.ToString();
-     
-        //count number of rotations to send split on spaces
-        MatchCollection collection = Regex.Matches(_response, @"[\S]+"); 
-        length = collection.Count;
-        UnityEngine.Debug.Log(_response + "length: "+ length);
-        //send a string of no_samples_per_signal rotations
-        if (length >= no_Samples_per_Signal ) {
-            
-            _response = _response.Remove(0, _response.IndexOf(' ') + 1);
-            //_response += "//";
-            //for (var i = startind; i < endind; i++)
-            //{
-            //   _response += convert.tostring(lista[i]);
-            //    _response += " ";
-            //}
-            UnityEngine.Debug.Log("in: " + _response + "length: " + length);
-            //_response += "##";
+        var length = listA.Count;
+        _response = listA[ind];
+        UnityEngine.Debug.Log(_response + " " + ind);
+        ind += 1;
+        if (ind == length)
+        {
+            ind = 1;
         }
-        
-        Connected = _netMqPublisher.Connected;
-        
-        
-        
+
     }
 
     private string HandleMessage(string message)
