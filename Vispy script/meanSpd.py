@@ -152,7 +152,7 @@ void main() {
 }
 """
 
-
+pos = np.array([[1,0],[-1,0]])
 class Canvas(app.Canvas):
     def __init__(self):
 
@@ -166,9 +166,6 @@ class Canvas(app.Canvas):
         self.program['u_scale'] = (1., 1.)
         self.program['u_size'] = (nrows, ncols)
         self.program['u_n'] = n
-        pos = np.zeros((20, 1), dtype=np.float32)
-        #pos[:, 0] = np.linspace(-20, 20 , 20)
-
         self.line = visuals.LinePlotVisual(pos, color='w', edge_color='w',
                                            symbol='o',
                                            face_color=(0.2, 0.2, 1))
